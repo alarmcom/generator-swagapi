@@ -40,7 +40,6 @@
 
         <%=Model%>.find(filters, fields, options).exec().then(function (results) {
             <%=formatSuccessResponse(method.responses, 'results')%>
-            return next();
         }).then(null, function(err) {
             return next(err);
         });

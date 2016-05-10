@@ -50,7 +50,6 @@ module.exports = yeoman.Base.extend({
                     // provides access to lodash within the template
                     route._ = _;
                     route.helpers = specutil;
-                    debug('generating handler %s', file);
                     self.template('_handler.js', file, route);
                 } else {
                     self.log.ok('(DRY-RUN) handler %s generated', file);
@@ -76,7 +75,6 @@ module.exports = yeoman.Base.extend({
                         helpers.unprefix(operation.handler, 'handlers/'), 'test_'), '.js'));
 
                 if (!self.options['dry-run']) {
-                    debug('generating handler test %s', file);
                     self.template('_test.js', file, {
                         _: _,
                         util: util,
@@ -118,6 +116,7 @@ module.exports = yeoman.Base.extend({
                 route.methods.push({
                     method: verb,
                     name: operation.operationId || '',
+                    summary: operation.summary|| '',
                     description: operation.description || '',
                     parameters: operation.parameters || [],
                     responses: operation.responses
@@ -152,8 +151,6 @@ module.exports = yeoman.Base.extend({
             dbFileName = upath.addExt(
                 upath.joinSafe(self.appRoot, 'models', name.toLowerCase()), '.js');
             if (self.fs.exists(dbFileName)) {
-                debug('handler dbmodel rel path: %s', upath.removeExt(
-                    upath.toUnix(path.relative(relPath, dbFileName)), '.js'));
                 if (!_.any(dbModels, {name: _s.classify(name)})) {
                     dbModels.push({
                         name: _s.classify(name),
@@ -164,12 +161,6 @@ module.exports = yeoman.Base.extend({
             }
         }
 
-        schemas = specutil.getRespSchema(route);
-        if (!_.isEmpty(schemas)) {
-            _.forEach(schemas, function (schema) {
-                handleDbFile(schema);
-            });
-        }
 
         route.path.split('/').forEach(function (element) {
             if (element) {
@@ -177,7 +168,14 @@ module.exports = yeoman.Base.extend({
             }
         });
 
-        debug(dbModels);
+        schemas = specutil.getRespSchema(route);
+
+        if (!_.isEmpty(schemas)) {
+            _.forEach(schemas, function (schema) {
+                handleDbFile(schema);
+            });
+        }
+
         return dbModels;
     }
 

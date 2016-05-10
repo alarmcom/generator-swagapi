@@ -1,4 +1,4 @@
-        <%=Model%>.findById(req.params.<%=parentId%>).exec().then(function (item) {
+        <%=Model%>.findOne({<%=parentId%>:req.params.<%=parentId%>}).exec().then(function (item) {
             if (!item) {
                 res.sendStatus(404);
                 return next();
@@ -10,7 +10,6 @@
                 return next();
             }
             <%=formatSuccessResponse(method.responses, 'subDoc')%>
-            return next();
         }).then(null, function (err) {
             return next(err);
         });

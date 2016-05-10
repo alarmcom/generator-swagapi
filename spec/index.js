@@ -37,9 +37,9 @@ module.exports = yeoman.Base.extend({
             }];
 
             self.prompt(prompts, function (answers) {
-                debug('prompt results: apiPath =>', answers.apiPath);
+                console.error('prompt results: apiPath =>', answers.apiPath);
                 if (helpers.hasValue(answers.apiPath)) {
-                    debug('setting value for apiPath');
+                    console.error('setting value for apiPath');
                     self.props.apiPath = answers.apiPath;
                 }
                 next();
@@ -47,7 +47,7 @@ module.exports = yeoman.Base.extend({
         },
 
         checkPath: function () {
-            debug('apiPath is: %s', this.props.apiPath);
+            console.error('apiPath is: %s', this.props.apiPath);
             if (!this.props.apiPath) {
                 this.env.error(new Error('missing required input `apiPath`'));
             }
@@ -65,7 +65,7 @@ module.exports = yeoman.Base.extend({
             }
 
             if (helpers.isRemote(apiSrcPath)) {
-                debug('apiPath is URL: %s', apiSrcPath);
+                console.error('apiPath is URL: %s', apiSrcPath);
                 return;
             }
 
@@ -84,7 +84,7 @@ module.exports = yeoman.Base.extend({
             apiSrcPath = this.props.apiPath;
 
             if (!helpers.isRemote(apiSrcPath)) {
-                debug('apiPath is file: %s', apiSrcPath);
+                console.error('apiPath is file: %s', apiSrcPath);
                 return;
             }
 
@@ -111,7 +111,7 @@ module.exports = yeoman.Base.extend({
 
             done = self.async();
             enjoi(apischema).validate(self.props.api, function (error, value) {
-                debug('validateSpec error:', error);
+                console.error('validateSpec error:', error);
                 done(error);
             });
         }
@@ -126,7 +126,7 @@ module.exports = yeoman.Base.extend({
                 return;
             }
 
-            debug('server apiPath: %s', upath.normalizeSafe(
+            console.error('server apiPath: %s', upath.normalizeSafe(
                 path.relative(this.appRoot, this.props.apiPath)));
             this.template('_server.js', 'server.js', {
                 apiPath: upath.normalizeSafe(

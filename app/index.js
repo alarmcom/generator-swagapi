@@ -44,7 +44,7 @@ module.exports = yeoman.Base.extend({
     prompting: {
         askAppNameEarly: function () {
             if (this.name) {
-                debug('name provided on CLI %s', this.name);
+                console.error('name provided on CLI %s', this.name);
                 return;
             }
 
@@ -56,8 +56,8 @@ module.exports = yeoman.Base.extend({
                 name: 'name',
                 default: this.appname
             }], function (props) {
-                debug('default appname was: %s', this.appname);
-                debug('appname provided: %s', props.name);
+                console.error('default appname was: %s', this.appname);
+                console.error('appname provided: %s', props.name);
                 this.name = props.name;
                 next();
             }.bind(this));
@@ -65,14 +65,14 @@ module.exports = yeoman.Base.extend({
 
         setAppName: function () {
             var oldRoot = this.destinationRoot();
-            debug('oldRoot: %s appName: %s', oldRoot, this.name);
+            console.error('oldRoot: %s appName: %s', oldRoot, this.name);
             this.appname = this.name;
             if (path.basename(oldRoot) !== this.appname) {
                 this.destinationRoot(upath.joinSafe(oldRoot, this.appname));
-                debug('updated destinationRoot to %s', this.destinationRoot());
+                console.error('updated destinationRoot to %s', this.destinationRoot());
             }
             this.appRoot = this.destinationRoot();
-            debug('Project %s base path %s', this.appname, this.appRoot);
+            console.error('Project %s base path %s', this.appname, this.appRoot);
         },
 
         setDefaults: function () {
@@ -103,9 +103,9 @@ module.exports = yeoman.Base.extend({
             }];
 
             self.prompt(prompts, function (answers) {
-                debug('prompt results: database =>', answers.database);
+                console.error('prompt results: database =>', answers.database);
                 if (helpers.hasValue(answers.database)) {
-                    debug('setting value for database');
+                    console.error('setting value for database');
                     self.props.database = answers.database;
                 }
                 next();
@@ -147,7 +147,7 @@ module.exports = yeoman.Base.extend({
                 return;
             }
 
-            debug('generating base application structure');
+            console.error('generating base application structure');
             this.copy('eslintrc', '.eslintrc');
             this.copy('eslintignore', '.eslintignore');
             this.copy('gitignore', '.gitignore');
@@ -179,7 +179,7 @@ module.exports = yeoman.Base.extend({
 
         database: function () {
             if (!this.props.database) {
-                debug('skipping database setup generation');
+                console.error('skipping database setup generation');
                 return;
             }
 
@@ -189,7 +189,7 @@ module.exports = yeoman.Base.extend({
                 return;
             }
 
-            debug('generating database configuration files');
+            console.error('generating database configuration files');
             this.template('_config_db.js', upath.joinSafe('config', 'db.js'), {
                 database: this.props.database
             });
@@ -211,7 +211,7 @@ module.exports = yeoman.Base.extend({
     install: {
         installNpm: function installNpm() {
             if (this.options['skip-install']) {
-                debug('skipping install');
+                console.error('skipping install');
                 return;
             }
 

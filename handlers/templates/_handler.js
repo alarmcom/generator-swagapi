@@ -1,7 +1,8 @@
 'use strict';
 var _ = require('lodash');
+
 <% _.forEach(dbmodels, function(dbmodel) {%>
-var <%=dbmodel.name%> = require('<%=dbmodel.path%>');<%})%>
+var <%=dbmodel.name%> = require('<%=dbmodel.path%>'); <%})%>
 
 /**
  * Operations on <%=path%>
@@ -10,9 +11,9 @@ module.exports = {
 <% var metadata = helpers.getPathMetadata(path);
    _.forEach(methods, function (method, i) {%>
     /**
-     * <%=method.description%>
-     *
-     * parameters: <%=method.parameters.map(function (p) { return p.name }).join(', ')%>
+     * summary    :<%=method.summary %>
+     * description:<%=method.description %>
+     * parameters :<%=method.parameters.map(function (p) { return p.name ;}).join(', ')%>
      */
     <%=method.method%>: function <%=method.name%>(req, res, next) {
     <% if (_.isEmpty(dbmodels)) {%>
@@ -21,6 +22,12 @@ module.exports = {
     <%
         return;
     }
+
+    var lastModel = 0;
+    _.forEach(dbmodels, function(dbmodel) {
+        lastModel++ ;
+    });
+
     var includeOpts = {
         Model: dbmodels[0].name,
         method: method,
